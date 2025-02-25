@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import jakarta.transaction.Transactional;
+
 @Component
 public class CollegeService {
 	
@@ -19,8 +21,8 @@ public class CollegeService {
 	
 	public ResponseEntity<College> create(College collegeName) {
 		try {
-		 collegeRepo.save(collegeName);
-		 return new ResponseEntity<>(collegeName,HttpStatus.CREATED);
+		 College createdCollege = collegeRepo.save(collegeName);
+		 return new ResponseEntity<>(createdCollege,HttpStatus.CREATED);
 		 }
 		catch(Exception e) {
 			return new ResponseEntity<>(collegeName,HttpStatus.CONFLICT);
@@ -34,15 +36,21 @@ public class CollegeService {
 	}
 
 	
-	public ResponseEntity<College> search(String collegeName) {
-		College collegeToSearch = collegeRepo.findBycollegeName(collegeName);
-		return new ResponseEntity<>(collegeToSearch,HttpStatus.ACCEPTED);
-			}
-
+	 @Transactional // Add Transactional annotation
+	    public ResponseEntity<College> search(String collegeName) {
+	        College collegeToSearch = collegeRepo.findBycollegeName(collegeName);
+	        if (collegeToSearch != null) {
+	            // Eagerly load students (already done due to transactional)
+	            collegeToSearch.getStudents().size(); // Trigger loading
+	            return new ResponseEntity<>(collegeToSearch, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	    }
 	
 	public ResponseEntity<String> deleteCollege(String collegeName) {
 		try {
-			 collegeRepo.findBycollegeName(collegeName);
+			 collegeRepo.deleteBycollegeName(collegeName);
 			 return new ResponseEntity<>("Deleted successfully",HttpStatus.ACCEPTED);
 		}
 		catch(Exception e) {

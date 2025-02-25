@@ -7,6 +7,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -18,18 +19,22 @@ public class College {
 	
 	//Fields
 	
-	@OneToMany(mappedBy = "college", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "collegeName", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Student> students;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@Column
+	
     private String collegeName;
+	
 	@Column
 	private String address;
+	
 	@Column
-	private Long contantNumber;
+	private Long contactNumber;
 	
 	
 	//Default Constructor
@@ -47,7 +52,7 @@ public class College {
 		this.id = id;
 		this.collegeName = collegeName;
 		this.address = address;
-		this.contantNumber = contantNumber;
+		this.contactNumber = contantNumber;
 	}
 
 	
@@ -67,7 +72,7 @@ public class College {
 	}
 
 	public void setContantNumber(Long contantNumber) {
-		this.contantNumber = contantNumber;
+		this.contactNumber = contantNumber;
 	}
 
 
@@ -79,7 +84,7 @@ public class College {
     //Getters
 	
 	public Long getContantNumber() {
-		return contantNumber;
+		return contactNumber;
 	}
 	
 	public String getAddress() {
@@ -102,6 +107,6 @@ public class College {
 	@Override
 	public String toString() {
 		return "College [id=" + id + ", collegeName=" + collegeName + ", address=" + address + ", contantNumber="
-				+ contantNumber + "]";
+				+ contactNumber + "]";
 	}
 }

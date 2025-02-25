@@ -28,9 +28,12 @@ public class StudentService {
 	 }
 
 	public ResponseEntity<Student> search(Long rollNo) {
-	
+	    try {
 		Student searchedstudent=studentrepo.findByrollNo(rollNo);
-		return new ResponseEntity<>(searchedstudent,HttpStatus.FOUND);
+		return new ResponseEntity<>(searchedstudent,HttpStatus.FOUND);}
+	    catch(Exception e) {
+	    	 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
 	}
 	
 	

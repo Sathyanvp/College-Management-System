@@ -7,4 +7,6 @@ import org.springframework.http.ResponseEntity;
 public interface CollegeRepository extends JpaRepository<College,Long>{
 	College findBycollegeName(String collegeName);
 
+	void deleteBycollegeName(String collegeName);
+
 }
